@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "retail-etl"
+version = "0.1.0"
+description = "Production-grade Databricks batch ETL pipeline (Bronze/Silver/Gold) for retail sales"
+requires-python = ">=3.10"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+# These entry points are what jobs/etl_pipeline_job.yml's python_wheel_task refers to.
+bronze_ingest = "src.bronze.ingest:main"
+silver_transform = "src.silver.transform:main"
+gold_aggregate = "src.gold.aggregate:main"
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

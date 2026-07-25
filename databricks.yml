@@ -1,0 +1,59 @@
+bundle:
+  name: retail-sales-lakehouse-etl
+
+variables:
+  catalog:
+    description: Unity Catalog name to use for this environment
+    default: retail_dev
+  schema:
+    description: Schema (database) name for medallion tables
+    default: sales
+
+include:
+  - jobs/*.yml
+
+artifacts:
+  etl_wheel:
+    type: whl
+    build: python -m pip wheel . -w dist --no-deps
+    path: .
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://<your-dev-workspace>.cloud.databricks.com
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/dev
+    variables:
+      catalog: retail_dev
+      schema: sales
+    run_as:
+      user_name: ${workspace.current_user.userName}
+
+  staging:
+    mode: production
+    workspace:
+      host: https://<your-staging-workspace>.cloud.databricks.com
+      root_path: /Bundles/${bundle.name}/staging
+    variables:
+      catalog: retail_staging
+      schema: sales
+    run_as:
+      service_principal_name: svc-databricks-staging
+
+  prod:
+    mode: production
+    workspace:
+      host: https://<your-prod-workspace>.cloud.databricks.com
+      root_path: /Bundles/${bundle.name}/prod
+    variables:
+      catalog: retail_prod
+      schema: sales
+    run_as:
+      service_principal_name: svc-databricks-prod
+    permissions:
+      - level: CAN_MANAGE_RUN
+        group_name: data-engineering
+      - level: CAN_VIEW
+        group_name: analytics-readers
