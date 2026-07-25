@@ -1,0 +1,23 @@
+catalog: retail_prod
+schema: sales
+
+source:
+  raw_path: "abfss://landing@retailprodstorage.dfs.core.windows.net/retail_sales/"
+  raw_format: json
+  schema_location: "abfss://landing@retailprodstorage.dfs.core.windows.net/retail_sales/_schema"
+
+bronze:
+  table: bronze_sales_raw
+  checkpoint_path: "abfss://pipelines@retailprodstorage.dfs.core.windows.net/retail_sales/checkpoints/bronze"
+
+silver:
+  table: silver_sales
+  quarantine_table: silver_sales_quarantine
+  checkpoint_path: "abfss://pipelines@retailprodstorage.dfs.core.windows.net/retail_sales/checkpoints/silver"
+
+gold:
+  daily_sales_table: gold_daily_sales_by_store_product
+
+processing:
+  shuffle_partitions: 200
+  max_files_per_trigger: 10000

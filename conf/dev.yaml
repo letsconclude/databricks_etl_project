@@ -1,0 +1,23 @@
+catalog: retail_dev
+schema: sales
+
+source:
+  raw_path: "dbfs:/mnt/landing/retail_sales/"
+  raw_format: json
+  schema_location: "dbfs:/mnt/landing/retail_sales/_schema"
+
+bronze:
+  table: bronze_sales_raw
+  checkpoint_path: "dbfs:/pipelines/retail_sales/checkpoints/bronze"
+
+silver:
+  table: silver_sales
+  quarantine_table: silver_sales_quarantine
+  checkpoint_path: "dbfs:/pipelines/retail_sales/checkpoints/silver"
+
+gold:
+  daily_sales_table: gold_daily_sales_by_store_product
+
+processing:
+  shuffle_partitions: 8
+  max_files_per_trigger: 1000
