@@ -1,5 +1,5 @@
 # Retail Sales Lakehouse ETL (Databricks + Delta Lake)
-
+Here is complete detail of the project.
 Production-grade batch ETL pipeline on Databricks implementing the **Medallion Architecture**
 (Bronze → Silver → Gold) using PySpark and Delta Lake, deployed via **Databricks Asset Bundles (DAB)**.
 
